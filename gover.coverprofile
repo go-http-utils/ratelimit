@@ -1,0 +1,7 @@
+mode: set
+github.com/go-http-utils/ratelimit/ratelimit.go:22.97,26.75 3 1
+github.com/go-http-utils/ratelimit/ratelimit.go:26.75,31.10 3 1
+github.com/go-http-utils/ratelimit/ratelimit.go:37.3,41.9 4 1
+github.com/go-http-utils/ratelimit/ratelimit.go:31.10,35.4 2 1
+github.com/go-http-utils/ratelimit/ratelimit.go:41.9,46.4 3 1
+github.com/go-http-utils/ratelimit/ratelimit.go:46.4,50.4 3 1
