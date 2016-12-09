@@ -56,7 +56,7 @@ func Handler(h http.Handler, getID GetIDFunc, duration time.Duration, count int6
 		if !ok {
 			b = &expireBucket{
 				bucket:  bucket.New(time.Duration(interval), count),
-				expired: time.Now().Add(duration * 5),
+				expired: time.Now().Add(duration),
 			}
 
 			bucketsMap[id] = b
@@ -65,7 +65,7 @@ func Handler(h http.Handler, getID GetIDFunc, duration time.Duration, count int6
 		ok = b.bucket.TryTake(1)
 		avail := b.bucket.Availible()
 		cap := b.bucket.Capability()
-		b.expired = time.Now().Add(duration * 5)
+		b.expired = time.Now().Add(duration)
 
 		mutex.Unlock()
 
