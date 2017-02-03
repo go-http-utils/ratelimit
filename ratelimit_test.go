@@ -4,10 +4,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
-
-	"strconv"
 
 	"github.com/go-http-utils/headers"
 	"github.com/stretchr/testify/suite"
@@ -21,14 +20,16 @@ type RatelimitSuite struct {
 
 func (s *RatelimitSuite) SetupSuite() {
 	mux := http.NewServeMux()
-
 	mux.Handle("/", http.HandlerFunc(helloHandler))
-
 	s.mux = mux
 }
 
 func (s *RatelimitSuite) TestHasRemaining() {
-	server := httptest.NewServer(Handler(s.mux, getID, time.Second*2, 2))
+	server := httptest.NewServer(Handler(s.mux, Options{
+		GetID:    getID,
+		Duration: time.Second * 2,
+		Count:    2,
+	}))
 
 	req, err := http.NewRequest(http.MethodGet, server.URL+"/", nil)
 	s.Nil(err)
@@ -39,7 +40,10 @@ func (s *RatelimitSuite) TestHasRemaining() {
 }
 
 func (s *RatelimitSuite) TestHasNoMoreRemaining() {
-	server := httptest.NewServer(Handler(s.mux, getID, time.Second*2, 2))
+	server := httptest.NewServer(Handler(s.mux, Options{
+		Duration: time.Second * 2,
+		Count:    2,
+	}))
 
 	for i := 0; i < 3; i++ {
 		req, err := http.NewRequest(http.MethodGet, server.URL+"/", nil)
@@ -60,7 +64,11 @@ func (s *RatelimitSuite) TestHasNoMoreRemaining() {
 }
 
 func (s *RatelimitSuite) TestTwoTicks() {
-	server := httptest.NewServer(Handler(s.mux, getID, time.Second*2, 2))
+	server := httptest.NewServer(Handler(s.mux, Options{
+		GetID:    getID,
+		Duration: time.Second * 2,
+		Count:    2,
+	}))
 
 	for i := 0; i < 3; i++ {
 		req, err := http.NewRequest(http.MethodGet, server.URL+"/", nil)

@@ -35,5 +35,9 @@ m.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
   res.Write([]byte("Hello Worlkd"))
 })
 
-http.ListenAndServe(":8080", ratelimit.Handler(m, getIDByReq, time.Second, 1000))
+http.ListenAndServe(":8080", ratelimit.Handler(m, ratelimit.Options{
+  GetID:    getIDByReq,
+  Duration: 1 * time.Second,
+  Count:    1000,
+}))
 ```
